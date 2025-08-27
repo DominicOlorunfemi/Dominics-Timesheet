@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dominic's Timesheet 2025</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4F81BD, #2F5F8F);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .sync-status {
+            text-align: right;
+        }
+
+        .sync-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        .sync-dot.syncing {
+            background: #ffc107;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .year-summary {
+            text-align: right;
+        }
+
+        .year-total {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .year-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .sync-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-sync {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .btn-sync:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .boss-view-link {
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .boss-view-link:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .tab {
+            padding: 12px 18px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            color: #4F81BD;
+        }
+
+        .tab.active {
+            color: #4F81BD;
+            background: white;
+            border-bottom-color: #4F81BD;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .month-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            opacity: 0.85;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #4F81BD;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3d6fa3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .data-status {
+            font-size: 11px;
+            color: #6c757d;
+            text-align: right;
+            opacity: 0.7;
+        }
+
+        .timesheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .timesheet-table th {
+            background: #4F81BD;
+            color: white;
+            padding: 10px 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .timesheet-table td {
+            padding: 6px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: background-color 0.15s ease;
+            vertical-align: middle;
+        }
+
+        .timesheet-table tr:nth-child(even):not(.total-row) {
+            background: #fbfcfd;
+        }
+
+        .timesheet-table tr:hover:not(.total-row):not(.non-working-day) {
+            background: #e8f4fd !important;
+        }
+
+        .checkbox-col { width: 45px; }
+        .date-col { width: 85px; }
+        .day-col { width: 70px; }
+        .time-col { width: 80px; }
+        .hours-col { width: 85px; }
+        .notes-col { width: 180px; }
+
+        input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 11px;
+            background: white;
+            font-family: inherit;
+        }
+
+        input[type="text"] {
+            text-align: left;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4F81BD;
+            box-shadow: 0 0 0 2px rgba(79, 129, 189, 0.2);
+        }
+
+        .total-row {
+            background: linear-gradient(135deg, #D9E1F2, #c5d2e8) !important;
+            font-weight: bold;
+        }
+
+        .total-cell {
+            background: linear-gradient(135deg, #FCE4D6, #f7d6c1) !important;
+            font-weight: bold;
+            color: #d63384;
+            font-size: 13px;
+        }
+
+        .non-working-day {
+            background: #f8f9fa !important;
+            color: #6c757d;
+            opacity: 0.75;
+        }
+
+        .non-working-day input:not([type="checkbox"]) {
+            background: #e9ecef !important;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .hours-short {
+            background: #ffe6e6 !important;
+            color: #721c24;
+        }
+
+        .hours-good {
+            background: #e6f7e6 !important;
+            color: #155724;
+        }
+
+        .weekend {
+            background: #f0f8ff !important;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #fff8dc, #ffeaa7);
+            border: 1px solid #ffd700;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .sync-info {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background: #28a745;
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .quick-actions {
+                justify-content: center;
+            }
+
+            .month-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timesheet-table {
+                font-size: 10px;
+            }
+
+            .timesheet-table th,
+            .timesheet-table td {
+                padding: 4px 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Dominic's Timesheet 2025</h1>
+            </div>
+            <div class="sync-status">
+                <div class="sync-indicator">
+                    <div class="sync-dot" id="sync-dot"></div>
+                    <span id="sync-status-text">Data synced</span>
+                </div>
+                <div class="year-summary">
+                    <div class="year-total" id="year-total">0.00</div>
+                    <div class="year-label">Total Year Hours</div>
+                    <div class="sync-controls">
+                        <button class="btn-sync" onclick="generateShareableData()">📤 Update Boss View</button>
+                        <a href="boss-view.html" target="_blank" class="boss-view-link">👁️ Boss View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs" id="tabs">
+            <button class="tab active" onclick="showTab('january')">January</button>
+            <button class="tab" onclick="showTab('february')">February</button>
+            <button class="tab" onclick="showTab('march')">March</button>
+            <button class="tab" onclick="showTab('april')">April</button>
+            <button class="tab" onclick="showTab('may')">May</button>
+            <button class="tab" onclick="showTab('june')">June</button>
+            <button class="tab" onclick="showTab('july')">July</button>
+            <button class="tab" onclick="showTab('august')">August</button>
+            <button class="tab" onclick="showTab('september')">September</button>
+            <button class="tab" onclick="showTab('october')">October</button>
+            <button class="tab" onclick="showTab('november')">November</button>
+            <button class="tab" onclick="showTab('december')">December</button>
+        </div>
+
+        <div id="month-content"></div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <input type="file" id="backup-file" accept=".json" style="display: none;" onchange="restoreFromFile(this)">
+
+    <script>
+        // Configuration
+        const monthsConfig = {
+            january: { days: 31, month: 0, name: 'January 2025' },
+            february: { days: 28, month: 1, name: 'February 2025' },
+            march: { days: 31, month: 2, name: 'March 2025' },
+            april: { days: 30, month: 3, name: 'April 2025' },
+            may: { days: 31, month: 4, name: 'May 2025' },
+            june: { days: 30, month: 5, name: 'June 2025' },
+            july: { days: 31, month: 6, name: 'July 2025' },
+            august: { days: 31, month: 7, name: 'August 2025' },
+            september: { days: 30, month: 8, name: 'September 2025' },
+            october: { days: 31, month: 9, name: 'October 2025' },
+            november: { days: 30, month: 10, name: 'November 2025' },
+            december: { days: 31, month: 11, name: 'December 2025' }
+        };
+
+        const ukBankHolidays = {
+            'january': [{ date: '2025-01-01', name: "New Year's Day" }],
+            'april': [
+                { date: '2025-04-18', name: 'Good Friday' },
+                { date: '2025-04-21', name: 'Easter Monday' }
+            ],
+            'may': [
+                { date: '2025-05-05', name: 'Early May Bank Holiday' },
+                { date: '2025-05-26', name: 'Spring Bank Holiday' }
+            ],
+            'august': [{ date: '2025-08-25', name: 'Summer Bank Holiday' }],
+            'december': [
+                { date: '2025-12-25', name: 'Christmas Day' },
+                { date: '2025-12-26', name: 'Boxing Day' }
+            ]
+        };
+
+        let currentMonth = 'january';
+        let timesheetData = {};
+
+        // Initialize data structure
+        function initializeData() {
+            const saved = localStorage.getItem('timesheetData_2025');
+            if (saved) {
+                timesheetData = JSON.parse(saved);
+            } else {
+                timesheetData = {};
+                Object.keys(monthsConfig).forEach(month => {
+                    timesheetData[month] = {};
+                });
+            }
+        }
+
+        // Save data and sync
+        function saveData() {
+            localStorage.setItem('timesheetData_2025', JSON.stringify(timesheetData));
+            localStorage.setItem('timesheetData_lastSaved', new Date().toISOString());
+            
+            // Auto-update the shareable data for boss view
+            generateShareableData(false); // false = don't show notification
+            
+            updateSyncStatus('synced');
+        }
+
+        // Generate shareable data file for boss view
+        function generateShareableData(showNotification = true) {
+            updateSyncStatus('syncing');
+            
+            const shareableData = {
+                version: '1.0',
+                lastUpdated: new Date().toISOString(),
+                employeeName: 'Dominic', // You can customize this
+                data: timesheetData
+            };
+            
+            // Save to localStorage with special key for boss view
+            localStorage.setItem('shareableTimesheetData_2025', JSON.stringify(shareableData));
+            
+            setTimeout(() => {
+                updateSyncStatus('synced');
+                
+                if (showNotification) {
+                    showNotification('Boss view updated! Share the link: boss-view.html', 'success');
+                }
+            }, 800);
+        }
+
+        // Update sync status indicator
+        function updateSyncStatus(status) {
+            const dot = document.getElementById('sync-dot');
+            const text = document.getElementById('sync-status-text');
+            
+            if (status === 'syncing') {
+                dot.className = 'sync-dot syncing';
+                text.textContent = 'Updating...';
+            } else {
+                dot.className = 'sync-dot';
+                text.textContent = 'Data synced';
+            }
+        }
+
+        // Generate month content
+        function generateMonthContent(monthKey) {
+            const config = monthsConfig[monthKey];
+            
+            return `
+                <div id="${monthKey}" class="tab-content ${monthKey === 'january' ? 'active' : ''}">
+                    <div class="sync-info">
+                        <strong>🔄 Auto-Sync Active:</strong> Your changes automatically update the boss view. 
+                        Click "Update Boss View" button to force a sync, then share the boss-view.html link with your manager.
+                    </div>
+
+                    <div class="instructions">
+                        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+                        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays. All data saves automatically.
+                    </div>
+
+                    <div class="month-summary">
+                        <div class="summary-item">
+                            <div class="summary-label">Month</div>
+                            <div class="summary-value">${config.name}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Hours</div>
+                            <div class="summary-value" id="${monthKey}-total">0.00</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Days</div>
+                            <div class="summary-value" id="${monthKey}-days">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Average</div>
+                            <div class="summary-value" id="${monthKey}-avg">0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <div class="quick-actions">
+                            <button class="btn btn-primary" onclick="fillWeekdayTimes('${monthKey}', '09:00', '18:00')">
+                                ⏰ Fill 9-6 Weekdays
+                            </button>
+                            <button class="btn btn-secondary" onclick="markBankHolidays('${monthKey}')">
+                                🏦 UK Holidays
+                            </button>
+                            <button class="btn btn-success" onclick="generateShareableData()">
+                                📤 Update Boss View
+                            </button>
+                            <button class="btn btn-danger" onclick="clearMonth('${monthKey}')">
+                                🗑️ Clear All
+                            </button>
+                        </div>
+                        <div class="data-status">
+                            Auto-saved • Last: <span id="last-saved">Never</span>
+                        </div>
+                    </div>
+
+                    <table class="timesheet-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">❌</th>
+                                <th class="date-col">Date</th>
+                                <th class="day-col">Day</th>
+                                <th class="time-col">Start</th>
+                                <th class="time-col">End</th>
+                                <th class="hours-col">Raw</th>
+                                <th class="hours-col">Paid</th>
+                                <th class="notes-col">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="${monthKey}-body">
+                            ${generateTableRows(monthKey, config)}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Generate table rows for a month
+        function generateTableRows(monthKey, config) {
+            let rows = '';
+            
+            for (let day = 1; day <= config.days; day++) {
+                const date = new Date(2025, config.month, day);
+                const dateStr = date.toISOString().split('T')[0];
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                const dayNum = date.getDay();
+                const isWeekend = dayNum === 0 || dayNum === 6;
+                
+                const dayData = timesheetData[monthKey][day] || {};
+                
+                rows += `
+                    <tr data-day="${day}" ${isWeekend ? 'class="weekend"' : ''}>
+                        <td><input type="checkbox" ${dayData.nonWorking ? 'checked' : ''} onchange="toggleNonWorkingDay('${monthKey}', ${day}, this)"></td>
+                        <td>${dateStr}</td>
+                        <td>${dayName}</td>
+                        <td><input type="time" value="${dayData.startTime || ''}" onchange="updateTime('${monthKey}', ${day}, 'startTime', this.value)"></td>
+                        <td><input type="time" value="${dayData.endTime || ''}" onchange="updateTime('${monthKey}', ${day}, 'endTime', this.value)"></td>
+                        <td class="raw-hours">0.00</td>
+                        <td class="hours-worked">0.00</td>
+                        <td><input type="text" value="${dayData.notes || ''}" placeholder="Notes..." onchange="updateNotes('${monthKey}', ${day}, this.value)"></td>
+                    </tr>
+                `;
+            }
+            
+            rows += `
+                <tr class="total-row">
+                    <td></td>
+                    <td colspan="4" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                    <td class="total-cell" id="${monthKey}-raw-total">0.00</td>
+                    <td class="total-cell" id="${monthKey}-worked-total">0.00</td>
+                    <td></td>
+                </tr>
+            `;
+            
+            return rows;
+        }
+
+        // Show specific month tab
+        function showTab(monthKey) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(monthKey).classList.add('active');
+            
+            currentMonth = monthKey;
+            updateCalculations(monthKey);
+        }
+
+        // Toggle non-working day
+        function toggleNonWorkingDay(monthKey, day, checkbox) {
+            const row = checkbox.closest('tr');
+            const inputs = row.querySelectorAll('input:not([type="checkbox"])');
+            
+            if (!timesheetData[monthKey][day]) {
+                timesheetData[monthKey][day] = {};
+            }
+            
+            timesheetData[monthKey][day].nonWorking = checkbox.checked;
+            
+            if (checkbox.checked) {
+                row.classList.add('non-working-day');
+                inputs.forEach(input => {
+                    if (input.type === 'time') {
+                        input.value = '';
+                        input.disabled = true;
+                        timesheetData[monthKey][day].startTime = '';
+                        timesheetData[monthKey][day].endTime = '';
+                    } else if (input.type === 'text' && !input.value) {
+                        input.placeholder = "Holiday, Sick Day, etc.";
+                    }
+                });
+            } else {
+                row.classList.remove('non-working-day');
+                inputs.forEach(input => {
+                    if (input.type === 'time') {
+                        input.disabled = false;
+                    } else if (input.type === 'text') {
+                        input.placeholder = "Notes...";
+                    }
+                });
+            }
+            
+            updateCalculations(monthKey);
+            saveData();
+        }
+
+        // Update time data
+        function updateTime(monthKey, day, field, value) {
+            if (!timesheetData[monthKey][day]) {
+                timesheetData[monthKey][day] = {};
+            }
+            
+            timesheetData[monthKey][day][field] = value;
+            updateCalculations(monthKey);
+            saveData();
+        }
+
+        // Update notes
+        function updateNotes(monthKey, day, value) {
+            if (!timesheetData[monthKey][day]) {
+                timesheetData[monthKey][day] = {};
+            }
+            
+            timesheetData[monthKey][day].notes = value;
+            saveData();
+        }
+
+        // Calculate hours and update display
+        function updateCalculations(monthKey) {
+            const config = monthsConfig[monthKey];
+            let totalRaw = 0;
+            let totalWorked = 0;
+            let workingDays = 0;
+
+            for (let day = 1; day <= config.days; day++) {
+                const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
+                const dayData = timesheetData[monthKey][day] || {};
+                
+                if (dayData.nonWorking) {
+                    row.querySelector('.raw-hours').textContent = '';
+                    row.querySelector('.hours-worked').textContent = '';
+                    row.classList.add('non-working-day');
+                    continue;
+                } else {
+                    row.classList.remove('non-working-day');
+                }
+
+                if (dayData.startTime && dayData.endTime) {
+                    const start = new Date(`2000-01-01T${dayData.startTime}:00`);
+                    const end = new Date(`2000-01-01T${dayData.endTime}:00`);
+                    
+                    if (end < start) end.setDate(end.getDate() + 1);
+                    
+                    const rawHours = (end - start) / (1000 * 60 * 60);
+                    const date = new Date(2025, config.month, day);
+                    const dayOfWeek = date.getDay();
+                    
+                    let workedHours = rawHours;
+                    
+                    // Apply break deduction
+                    if ((dayOfWeek >= 1 && dayOfWeek <= 5 && rawHours >= 9.0) || 
+                        (dayOfWeek === 6 && rawHours >= 6.5)) {
+                        workedHours = rawHours - 0.5;
+                    }
+                    
+                    row.querySelector('.raw-hours').textContent = rawHours.toFixed(2);
+                    row.querySelector('.hours-worked').textContent = workedHours.toFixed(2);
+                    
+                    // Apply conditional formatting
+                    const hoursCell = row.querySelector('.hours-worked');
+                    hoursCell.classList.remove('hours-short', 'hours-good');
+                    if (workedHours < 4 && workedHours > 0) {
+                        hoursCell.classList.add('hours-short');
+                    } else if (workedHours >= 8) {
+                        hoursCell.classList.add('hours-good');
+                    }
+                    
+                    totalRaw += rawHours;
+                    totalWorked += workedHours;
+                    workingDays++;
+                } else {
+                    row.querySelector('.raw-hours').textContent = '0.00';
+                    row.querySelector('.hours-worked').textContent = '0.00';
+                }
+            }
+
+            // Update totals display
+            document.getElementById(`${monthKey}-raw-total`).textContent = totalRaw.toFixed(2);
+            document.getElementById(`${monthKey}-worked-total`).textContent = totalWorked.toFixed(2);
+            document.getElementById(`${monthKey}-total`).textContent = totalWorked.toFixed(2);
+            document.getElementById(`${monthKey}-days`).textContent = workingDays;
+            document.getElementById(`${monthKey}-avg`).textContent = workingDays > 0 ? (totalWorked / workingDays).toFixed(2) : '0.00';
+            
+            updateYearTotal();
+            updateLastSaved();
+        }
+
+        // Update year total
+        function updateYearTotal() {
+            let yearTotal = 0;
+            Object.keys(monthsConfig).forEach(month => {
+                const monthTotal = parseFloat(document.getElementById(`${month}-total`)?.textContent || 0);
+                yearTotal += monthTotal;
+            });
+            document.getElementById('year-total').textContent = yearTotal.toFixed(2);
+        }
+
+        // Fill weekday times
+        function fillWeekdayTimes(monthKey, startTime, endTime) {
+            const config = monthsConfig[monthKey];
+            
+            for (let day = 1; day <= config.days; day++) {
+                const date = new Date(2025, config.month, day);
+                const dayOfWeek = date.getDay();
+                const dayData = timesheetData[monthKey][day] || {};
+                
+                if (dayOfWeek >= 1 && dayOfWeek <= 5 && !dayData.nonWorking) {
+                    updateTime(monthKey, day, 'startTime', startTime);
+                    updateTime(monthKey, day, 'endTime', endTime);
+                    
+                    const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
+                    row.querySelector('input[type="time"]:nth-of-type(1)').value = startTime;
+                    row.querySelector('input[type="time"]:nth-of-type(2)').value = endTime;
+                }
+            }
+            
+            updateCalculations(monthKey);
+            showNotification('Weekday times filled!');
+        }
+
+        // Mark UK bank holidays
+        function markBankHolidays(monthKey) {
+            const holidays = ukBankHolidays[monthKey] || [];
+            let marked = 0;
+            
+            holidays.forEach(holiday => {
+                const date = new Date(holiday.date);
+                const day = date.getDate();
+                
+                if (!timesheetData[monthKey][day]) {
+                    timesheetData[monthKey][day] = {};
+                }
+                
+                timesheetData[monthKey][day].nonWorking = true;
+                timesheetData[monthKey][day].notes = holiday.name;
+                
+                const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
+                if (row) {
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    const notesInput = row.querySelector('input[type="text"]');
+                    
+                    checkbox.checked = true;
+                    notesInput.value = holiday.name;
+                    toggleNonWorkingDay(monthKey, day, checkbox);
+                    marked++;
+                }
+            });
+            
+            if (marked > 0) {
+                showNotification(`${marked} UK bank holiday(s) marked!`);
+            } else {
+                showNotification('No bank holidays in this month', 'info');
+            }
+        }
+
+        // Clear all data for month
+        function clearMonth(monthKey) {
+            if (confirm(`Clear all data for ${monthsConfig[monthKey].name}? This cannot be undone.`)) {
+                timesheetData[monthKey] = {};
+                
+                const tbody = document.getElementById(`${monthKey}-body`);
+                const rows = tbody.querySelectorAll('tr:not(.total-row)');
+                
+                rows.forEach(row => {
+                    row.querySelector('input[type="checkbox"]').checked = false;
+                    row.classList.remove('non-working-day');
+                    row.querySelectorAll('input[type="time"]').forEach(input => {
+                        input.value = '';
+                        input.disabled = false;
+                    });
+                    row.querySelector('input[type="text"]').value = '';
+                    row.querySelector('.raw-hours').textContent = '0.00';
+                    row.querySelector('.hours-worked').textContent = '0.00';
+                });
+                
+                updateCalculations(monthKey);
+                saveData();
+                showNotification('Month cleared!');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Update last saved time display
+        function updateLastSaved() {
+            const lastSaved = localStorage.getItem('timesheetData_lastSaved');
+            if (lastSaved) {
+                const date = new Date(lastSaved);
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('last-saved').textContent = timeStr;
+            }
+        }
+
+        // Initialize everything
+        function init() {
+            initializeData();
+            
+            // Generate all month content
+            const monthContent = document.getElementById('month-content');
+            monthContent.innerHTML = Object.keys(monthsConfig).map(generateMonthContent).join('');
+            
+            // Update all calculations
+            Object.keys(monthsConfig).forEach(monthKey => {
+                updateCalculations(monthKey);
+            });
+            
+            updateLastSaved();
+            
+            // Generate initial shareable data
+            generateShareableData(false);
+            
+            // Auto-save every 30 seconds if there are changes
+            setInterval(() => {
+                saveData();
+            }, 30000);
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Save before page unload
+        window.addEventListener('beforeunload', saveData);
+    </script>
+</body>
+</html>
