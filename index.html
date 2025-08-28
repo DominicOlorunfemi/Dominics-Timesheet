@@ -33,6 +33,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><pattern id="grain" width="100" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="5" r="1" fill="rgba(255,255,255,0.4)"/><circle cx="30" cy="15" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="60" cy="8" r="0.8" fill="rgba(255,255,255,0.08)"/><circle cx="80" cy="12" r="0.3" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="20" fill="url(%23grain)"/></svg>');
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background-image: url('https://www.absoluteprint.com/wp-content/uploads/2019/02/Absolute-Print-logo-type-e1549458070492.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .header > * {
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
@@ -536,8 +572,75 @@
             ]
         };
 
-        let currentMonth = 'january';
-        let timesheetData = {};
+        // Security Configuration
+        const ACCESS_CODE = 'dominic2025'; // Change this to your preferred password
+        const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        // Check authentication status
+        function checkAuth() {
+            const authTime = localStorage.getItem('timesheetAuth');
+            const currentTime = new Date().getTime();
+            
+            if (authTime && (currentTime - parseInt(authTime)) < SESSION_TIMEOUT) {
+                return true; // Still authenticated
+            } else {
+                localStorage.removeItem('timesheetAuth');
+                return false; // Session expired or not authenticated
+            }
+        }
+
+        // Handle password input
+        function handlePasswordKeydown(event) {
+            if (event.key === 'Enter') {
+                attemptLogin();
+            }
+        }
+
+        // Attempt login
+        function attemptLogin() {
+            const passwordInput = document.getElementById('password-input');
+            const errorDiv = document.getElementById('login-error');
+            
+            if (passwordInput.value === ACCESS_CODE) {
+                // Correct password
+                localStorage.setItem('timesheetAuth', new Date().getTime().toString());
+                document.getElementById('login-overlay').classList.add('hidden');
+                showNotification('✅ Access granted - timesheet unlocked', 'success');
+            } else {
+                // Wrong password
+                errorDiv.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.style.borderColor = '#dc3545';
+                
+                // Reset error state after 3 seconds
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                    passwordInput.style.borderColor = '#e9ecef';
+                }, 3000);
+                
+                showNotification('❌ Access denied - incorrect code', 'error');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout? You\'ll need to enter your access code again.')) {
+                localStorage.removeItem('timesheetAuth');
+                document.getElementById('login-overlay').classList.remove('hidden');
+                showNotification('🔒 Logged out successfully', 'info');
+            }
+        }
+
+        // Initialize authentication
+        function initAuth() {
+            if (!checkAuth()) {
+                document.getElementById('login-overlay').classList.remove('hidden');
+                // Focus password input after a short delay
+                setTimeout(() => {
+                    document.getElementById('password-input').focus();
+                }, 500);
+            }
+        }
 
         // Initialize data structure
         function initializeData() {
@@ -692,7 +795,7 @@
                 rows += `
                     <tr data-day="${day}" ${isWeekend ? 'class="weekend"' : ''}>
                         <td><input type="checkbox" ${dayData.nonWorking ? 'checked' : ''} onchange="toggleNonWorkingDay('${monthKey}', ${day}, this)"></td>
-                        <td>${dateStr}</td>
+                        <td>${date.toLocaleDateString('en-GB')}</td>
                         <td>${dayName}</td>
                         <td><input type="time" value="${dayData.startTime || ''}" onchange="updateTime('${monthKey}', ${day}, 'startTime', this.value)"></td>
                         <td><input type="time" value="${dayData.endTime || ''}" onchange="updateTime('${monthKey}', ${day}, 'endTime', this.value)"></td>
@@ -870,24 +973,43 @@
         // Fill weekday times
         function fillWeekdayTimes(monthKey, startTime, endTime) {
             const config = monthsConfig[monthKey];
+            let filledCount = 0;
             
             for (let day = 1; day <= config.days; day++) {
                 const date = new Date(2025, config.month, day);
                 const dayOfWeek = date.getDay();
                 const dayData = timesheetData[monthKey][day] || {};
                 
+                // Only fill weekdays (Mon-Fri) that aren't marked as non-working
                 if (dayOfWeek >= 1 && dayOfWeek <= 5 && !dayData.nonWorking) {
-                    updateTime(monthKey, day, 'startTime', startTime);
-                    updateTime(monthKey, day, 'endTime', endTime);
+                    // Initialize day data if it doesn't exist
+                    if (!timesheetData[monthKey][day]) {
+                        timesheetData[monthKey][day] = {};
+                    }
                     
+                    // Update the data
+                    timesheetData[monthKey][day].startTime = startTime;
+                    timesheetData[monthKey][day].endTime = endTime;
+                    
+                    // Update the UI inputs
                     const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
-                    row.querySelector('input[type="time"]:nth-of-type(1)').value = startTime;
-                    row.querySelector('input[type="time"]:nth-of-type(2)').value = endTime;
+                    if (row) {
+                        const startInput = row.querySelector('input[type="time"]:nth-of-type(1)');
+                        const endInput = row.querySelector('input[type="time"]:nth-of-type(2)');
+                        
+                        if (startInput) startInput.value = startTime;
+                        if (endInput) endInput.value = endTime;
+                    }
+                    
+                    filledCount++;
                 }
             }
             
+            // Recalculate everything and save
             updateCalculations(monthKey);
-            showNotification('Weekday times filled!');
+            saveData();
+            
+            showNotification(`✅ Filled ${filledCount} weekday${filledCount !== 1 ? 's' : ''} with ${startTime}-${endTime}!`);
         }
 
         // Mark UK bank holidays
@@ -973,8 +1095,14 @@
             }
         }
 
+        let currentMonth = 'january';
+        let timesheetData = {};
+
         // Initialize everything
         function init() {
+            // Initialize authentication first
+            initAuth();
+            
             initializeData();
             
             // Generate all month content
