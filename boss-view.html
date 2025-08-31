@@ -43,6 +43,24 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><pattern id="grain" width="100" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="5" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="30" cy="15" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="60" cy="8" r="0.8" fill="rgba(255,255,255,0.08)"/><circle cx="80" cy="12" r="0.3" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="20" fill="url(%23grain)"/></svg>');
             opacity: 0.6;
+            z-index: 0;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            background-image: url('https://www.absoluteprint.com/wp-content/uploads/2019/02/Absolute-Print-logo-type-e1549458070492.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .header-content {
@@ -729,6 +747,7 @@
         // Generate read-only table rows
         function generateReadOnlyTableRows(monthKey, config) {
             let rows = '';
+            let hasAnyData = false;
             
             for (let day = 1; day <= config.days; day++) {
                 const date = new Date(2025, config.month, day);
@@ -738,11 +757,6 @@
                 const isWeekend = dayNum === 0 || dayNum === 6;
                 
                 const dayData = timesheetData[monthKey][day] || {};
-                
-                // Skip days with no data unless it's a non-working day
-                if (!dayData.nonWorking && !dayData.startTime && !dayData.endTime && !dayData.notes) {
-                    continue;
-                }
                 
                 let statusIcon = '';
                 let rowClass = '';
@@ -756,11 +770,13 @@
                     statusIcon = '<span class="non-working-icon">❌</span>';
                     rowClass = 'non-working-day';
                     notes = dayData.notes || 'Non-working day';
+                    hasAnyData = true;
                 } else if (dayData.startTime && dayData.endTime) {
                     statusIcon = '<span class="working-icon">✅</span>';
                     startTime = dayData.startTime;
                     endTime = dayData.endTime;
                     notes = dayData.notes || '';
+                    hasAnyData = true;
                     
                     // Calculate hours
                     const start = new Date(`2000-01-01T${dayData.startTime}:00`);
@@ -783,6 +799,7 @@
                         rowClass = 'hours-good';
                     }
                 } else {
+                    // Show empty row for days with no data
                     statusIcon = '<span style="color: #6c757d;">○</span>';
                 }
                 
@@ -790,6 +807,7 @@
                     rowClass = 'weekend';
                 }
                 
+                // Show ALL days, even if they have no data (for complete monthly view)
                 rows += `
                     <tr class="${rowClass}" data-day="${day}">
                         <td>${statusIcon}</td>
@@ -804,20 +822,19 @@
                 `;
             }
             
-            // Only add totals row if there are data rows
-            if (rows) {
-                rows += `
-                    <tr class="total-row">
-                        <td></td>
-                        <td colspan="4" style="text-align: right; font-weight: bold;">MONTHLY TOTAL:</td>
-                        <td class="total-cell" id="${monthKey}-raw-total">0.00</td>
-                        <td class="total-cell" id="${monthKey}-worked-total">0.00</td>
-                        <td></td>
-                    </tr>
-                `;
-            }
+            // Add totals row
+            rows += `
+                <tr class="total-row">
+                    <td></td>
+                    <td colspan="4" style="text-align: right; font-weight: bold;">MONTHLY TOTAL:</td>
+                    <td class="total-cell" id="${monthKey}-raw-total">0.00</td>
+                    <td class="total-cell" id="${monthKey}-worked-total">0.00</td>
+                    <td></td>
+                </tr>
+            `;
             
-            return rows || '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #6c757d; font-style: italic;">No entries for this month</td></tr>';
+            return rows;
+        }
         }
 
         // Show specific month tab
