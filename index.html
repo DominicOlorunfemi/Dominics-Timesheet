@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dominic's Timesheet 2025</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -66,101 +64,17 @@
             pointer-events: none;
         }
 
-        .header > * {
-            position: relative;
-            z-index: 1;
-        }
+        .header > * { position: relative; z-index: 1; }
 
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 400;
-        }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 400; }
 
-        .sync-status {
-            text-align: right;
-        }
-
-        .sync-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 12px;
-        }
-
-        .sync-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #28a745;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .year-summary {
-            text-align: right;
-        }
-
-        .year-total {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-
-        .year-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .sync-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .btn-sync {
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .btn-sync:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .boss-view-link {
-            background: #28a745;
-            color: white;
-            padding: 8px 12px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .boss-view-link:hover {
-            background: #218838;
-            transform: translateY(-1px);
-        }
+        .year-total { font-size: 28px; font-weight: bold; text-align: right; }
 
         .tabs {
             display: flex;
             background: #f8f9fa;
             border-bottom: 2px solid #e9ecef;
             overflow-x: auto;
-            scrollbar-width: thin;
         }
 
         .tab {
@@ -173,29 +87,14 @@
             color: #495057;
             transition: all 0.3s ease;
             white-space: nowrap;
-            position: relative;
             border-bottom: 3px solid transparent;
         }
 
-        .tab:hover {
-            background: #e9ecef;
-            color: #4F81BD;
-        }
+        .tab:hover { background: #e9ecef; color: #4F81BD; }
+        .tab.active { color: #4F81BD; background: white; border-bottom-color: #4F81BD; }
 
-        .tab.active {
-            color: #4F81BD;
-            background: white;
-            border-bottom-color: #4F81BD;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; padding: 20px; }
+        .tab-content.active { display: block; }
 
         .month-summary {
             display: grid;
@@ -208,34 +107,14 @@
             border-radius: 8px;
         }
 
-        .summary-item {
-            text-align: center;
-        }
-
-        .summary-label {
-            font-size: 11px;
-            opacity: 0.85;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-value {
-            font-size: 18px;
-            font-weight: bold;
-        }
+        .summary-item { text-align: center; }
+        .summary-label { font-size: 11px; opacity: 0.85; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .summary-value { font-size: 18px; font-weight: bold; }
 
         .controls {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: end;
-        }
-
-        .quick-actions {
             display: flex;
             gap: 8px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
 
@@ -247,51 +126,16 @@
             font-size: 12px;
             font-weight: 500;
             transition: all 0.2s ease;
-            white-space: nowrap;
         }
 
-        .btn-primary {
-            background: #4F81BD;
-            color: white;
-        }
+        .btn-primary { background: #4F81BD; color: white; }
+        .btn-primary:hover { background: #3d6fa3; }
 
-        .btn-primary:hover {
-            background: #3d6fa3;
-        }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
 
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .data-status {
-            font-size: 11px;
-            color: #6c757d;
-            text-align: right;
-            opacity: 0.7;
-        }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
 
         .timesheet-table {
             width: 100%;
@@ -300,7 +144,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             border-radius: 8px;
             overflow: hidden;
-            background: white;
         }
 
         .timesheet-table th {
@@ -312,33 +155,17 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
 
         .timesheet-table td {
             padding: 6px;
             border: 1px solid #e9ecef;
             text-align: center;
-            transition: background-color 0.15s ease;
             vertical-align: middle;
         }
 
-        .timesheet-table tr:nth-child(even):not(.total-row) {
-            background: #fbfcfd;
-        }
-
-        .timesheet-table tr:hover:not(.total-row):not(.non-working-day) {
-            background: #e8f4fd !important;
-        }
-
-        .checkbox-col { width: 45px; }
-        .date-col { width: 85px; }
-        .day-col { width: 70px; }
-        .time-col { width: 80px; }
-        .hours-col { width: 85px; }
-        .notes-col { width: 180px; }
+        .timesheet-table tr:nth-child(even):not(.total-row) { background: #fbfcfd; }
+        .timesheet-table tr:hover:not(.total-row):not(.non-working-day) { background: #e8f4fd !important; }
 
         input {
             width: 100%;
@@ -350,60 +177,19 @@
             font-family: inherit;
         }
 
-        input[type="text"] {
-            text-align: left;
-        }
+        input[type="text"] { text-align: left; }
+        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; margin: 0; }
+        input:focus { outline: none; border-color: #4F81BD; box-shadow: 0 0 0 2px rgba(79, 129, 189, 0.2); }
 
-        input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            margin: 0;
-        }
+        .total-row { background: linear-gradient(135deg, #D9E1F2, #c5d2e8) !important; font-weight: bold; }
+        .total-cell { background: linear-gradient(135deg, #FCE4D6, #f7d6c1) !important; font-weight: bold; color: #d63384; font-size: 13px; }
 
-        input:focus {
-            outline: none;
-            border-color: #4F81BD;
-            box-shadow: 0 0 0 2px rgba(79, 129, 189, 0.2);
-        }
+        .non-working-day { background: #f8f9fa !important; color: #6c757d; opacity: 0.75; }
+        .non-working-day input:not([type="checkbox"]) { background: #e9ecef !important; color: #6c757d; cursor: not-allowed; }
 
-        .total-row {
-            background: linear-gradient(135deg, #D9E1F2, #c5d2e8) !important;
-            font-weight: bold;
-        }
-
-        .total-cell {
-            background: linear-gradient(135deg, #FCE4D6, #f7d6c1) !important;
-            font-weight: bold;
-            color: #d63384;
-            font-size: 13px;
-        }
-
-        .non-working-day {
-            background: #f8f9fa !important;
-            color: #6c757d;
-            opacity: 0.75;
-        }
-
-        .non-working-day input:not([type="checkbox"]) {
-            background: #e9ecef !important;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        .hours-short {
-            background: #ffe6e6 !important;
-            color: #721c24;
-        }
-
-        .hours-good {
-            background: #e6f7e6 !important;
-            color: #155724;
-        }
-
-        .weekend {
-            background: #f0f8ff !important;
-        }
+        .hours-short { background: #ffe6e6 !important; color: #721c24; }
+        .hours-good { background: #e6f7e6 !important; color: #155724; }
+        .weekend { background: #f0f8ff !important; }
 
         .instructions {
             background: linear-gradient(135deg, #fff8dc, #ffeaa7);
@@ -415,74 +201,12 @@
             line-height: 1.4;
         }
 
-        .sync-info {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            border: 1px solid #28a745;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 16px;
-            background: #28a745;
-            color: white;
-            border-radius: 6px;
-            font-size: 13px;
-            z-index: 1000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.error {
-            background: #dc3545;
-        }
-
-        .notification.info {
-            background: #17a2b8;
-        }
-
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .header {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-
-            .controls {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .quick-actions {
-                justify-content: center;
-            }
-
-            .month-summary {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .timesheet-table {
-                font-size: 10px;
-            }
-
-            .timesheet-table th,
-            .timesheet-table td {
-                padding: 4px 3px;
-            }
+            body { padding: 10px; }
+            .header { flex-direction: column; gap: 10px; text-align: center; }
+            .month-summary { grid-template-columns: repeat(2, 1fr); }
+            .timesheet-table { font-size: 10px; }
+            .timesheet-table th, .timesheet-table td { padding: 4px 3px; }
         }
     </style>
 </head>
@@ -492,23 +216,10 @@
             <div>
                 <h1>Dominic's Timesheet 2025</h1>
             </div>
-            <div class="sync-status">
-                <div class="sync-indicator">
-                    <div class="sync-dot" id="sync-dot"></div>
-                    <span id="sync-status-text">Data synced</span>
-                </div>
-                <div class="year-summary">
-                    <div class="year-total" id="year-total">0.00</div>
-                    <div class="year-label">Total Year Hours</div>
-                    <div class="sync-controls">
-                        <button class="btn-sync" onclick="generateShareableData()">📤 Update Boss View</button>
-                        <a href="boss-view.html" target="_blank" class="boss-view-link">👁️ Boss View</a>
-                    </div>
-                </div>
-            </div>
+            <div class="year-total" id="year-total">0.00 hrs</div>
         </div>
 
-        <div class="tabs" id="tabs">
+        <div class="tabs">
             <button class="tab active" onclick="showTab('january')">January</button>
             <button class="tab" onclick="showTab('february')">February</button>
             <button class="tab" onclick="showTab('march')">March</button>
@@ -523,15 +234,11 @@
             <button class="tab" onclick="showTab('december')">December</button>
         </div>
 
+        <!-- January Tab -->
         <div id="january" class="tab-content active">
-            <div class="sync-info">
-                <strong>🔄 Auto-Sync Active:</strong> Your changes automatically update the boss view. 
-                Click "Update Boss View" button to force a sync, then share the boss-view.html link with your manager.
-            </div>
-
             <div class="instructions">
                 <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
-                System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays. All data saves automatically.
+                System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
             </div>
 
             <div class="month-summary">
@@ -554,40 +261,26 @@
             </div>
 
             <div class="controls">
-                <div class="quick-actions">
-                    <button class="btn btn-primary" onclick="fillWeekdayTimes('january', '09:00', '18:00')">
-                        ⏰ Fill 9-6 Weekdays
-                    </button>
-                    <button class="btn btn-secondary" onclick="markBankHolidays('january')">
-                        🏦 UK Holidays
-                    </button>
-                    <button class="btn btn-success" onclick="generateShareableData()">
-                        📤 Update Boss View
-                    </button>
-                    <button class="btn btn-danger" onclick="clearMonth('january')">
-                        🗑️ Clear All
-                    </button>
-                </div>
-                <div class="data-status">
-                    Auto-saved • Last: <span id="last-saved">Never</span>
-                </div>
+                <button class="btn btn-primary" onclick="fillWeekdays()">⏰ Fill 9-6 Weekdays</button>
+                <button class="btn btn-secondary" onclick="markHolidays()">🏦 UK Holidays</button>
+                <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
             </div>
 
             <table class="timesheet-table">
                 <thead>
                     <tr>
-                        <th class="checkbox-col">❌</th>
-                        <th class="date-col">Date</th>
-                        <th class="day-col">Day</th>
-                        <th class="time-col">Start</th>
-                        <th class="time-col">End</th>
-                        <th class="hours-col">Raw</th>
-                        <th class="hours-col">Paid</th>
-                        <th class="notes-col">Notes</th>
+                        <th style="width: 45px;">❌</th>
+                        <th style="width: 85px;">Date</th>
+                        <th style="width: 70px;">Day</th>
+                        <th style="width: 80px;">Start</th>
+                        <th style="width: 80px;">End</th>
+                        <th style="width: 85px;">Raw</th>
+                        <th style="width: 85px;">Paid</th>
+                        <th style="width: 180px;">Notes</th>
                     </tr>
                 </thead>
-                <tbody id="january-body">
-                    <!-- Table will be generated by JavaScript -->
+                <tbody id="timesheet-body">
+                    <!-- January days will be here -->
                 </tbody>
             </table>
         </div>
@@ -595,161 +288,56 @@
         <!-- Other months -->
         <div id="february" class="tab-content">
             <div class="month-summary">
-                <div class="summary-item">
-                    <div class="summary-label">Month</div>
-                    <div class="summary-value">February 2025</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Hours</div>
-                    <div class="summary-value" id="february-total">0.00</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Days</div>
-                    <div class="summary-value" id="february-days">0</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Average</div>
-                    <div class="summary-value" id="february-avg">0.00</div>
-                </div>
+                <div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">February 2025</div></div>
+                <div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value">0.00</div></div>
             </div>
-            <p style="text-align: center; padding: 40px; color: #666; font-style: italic;">
-                February timesheet (same structure as January)
-            </p>
+            <p style="text-align: center; padding: 40px; color: #666;">February timesheet (same structure as January)</p>
         </div>
 
-        <!-- Placeholder for other months -->
-        <div id="march" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">March 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="march-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="march-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="march-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">March timesheet</p></div>
-        
-        <div id="april" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">April 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="april-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="april-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="april-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">April timesheet</p></div>
-
-        <div id="may" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">May 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="may-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="may-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="may-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">May timesheet</p></div>
-
-        <div id="june" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">June 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="june-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="june-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="june-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">June timesheet</p></div>
-
-        <div id="july" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">July 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="july-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="july-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="july-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">July timesheet</p></div>
-
-        <div id="august" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">August 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="august-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="august-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="august-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">August timesheet</p></div>
-
-        <div id="september" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">September 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="september-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="september-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="september-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">September timesheet</p></div>
-
-        <div id="october" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">October 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="october-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="october-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="october-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">October timesheet</p></div>
-
-        <div id="november" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">November 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="november-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="november-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="november-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">November timesheet</p></div>
-
-        <div id="december" class="tab-content"><div class="month-summary"><div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">December 2025</div></div><div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value" id="december-total">0.00</div></div><div class="summary-item"><div class="summary-label">Days</div><div class="summary-value" id="december-days">0</div></div><div class="summary-item"><div class="summary-label">Average</div><div class="summary-value" id="december-avg">0.00</div></div></div><p style="text-align: center; padding: 40px; color: #666; font-style: italic;">December timesheet</p></div>
+        <div id="march" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">March timesheet</p></div>
+        <div id="april" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">April timesheet</p></div>
+        <div id="may" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">May timesheet</p></div>
+        <div id="june" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">June timesheet</p></div>
+        <div id="july" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">July timesheet</p></div>
+        <div id="august" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">August timesheet</p></div>
+        <div id="september" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">September timesheet</p></div>
+        <div id="october" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">October timesheet</p></div>
+        <div id="november" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">November timesheet</p></div>
+        <div id="december" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">December timesheet</p></div>
     </div>
 
-    <div id="notification" class="notification"></div>
-
     <script>
-        // Configuration
-        const monthsConfig = {
-            january: { days: 31, month: 0, name: 'January 2025' },
-            february: { days: 28, month: 1, name: 'February 2025' },
-            march: { days: 31, month: 2, name: 'March 2025' },
-            april: { days: 30, month: 3, name: 'April 2025' },
-            may: { days: 31, month: 4, name: 'May 2025' },
-            june: { days: 30, month: 5, name: 'June 2025' },
-            july: { days: 31, month: 6, name: 'July 2025' },
-            august: { days: 31, month: 7, name: 'August 2025' },
-            september: { days: 30, month: 8, name: 'September 2025' },
-            october: { days: 31, month: 9, name: 'October 2025' },
-            november: { days: 30, month: 10, name: 'November 2025' },
-            december: { days: 31, month: 11, name: 'December 2025' }
-        };
-
-        const ukBankHolidays = {
-            'january': [{ date: '2025-01-01', name: "New Year's Day" }],
-            'april': [
-                { date: '2025-04-18', name: 'Good Friday' },
-                { date: '2025-04-21', name: 'Easter Monday' }
-            ],
-            'may': [
-                { date: '2025-05-05', name: 'Early May Bank Holiday' },
-                { date: '2025-05-26', name: 'Spring Bank Holiday' }
-            ],
-            'august': [{ date: '2025-08-25', name: 'Summer Bank Holiday' }],
-            'december': [
-                { date: '2025-12-25', name: 'Christmas Day' },
-                { date: '2025-12-26', name: 'Boxing Day' }
-            ]
-        };
-
-        let currentMonth = 'january';
         let timesheetData = {};
 
-        // Initialize data structure
-        function initializeData() {
-            const saved = localStorage.getItem('timesheetData_2025');
-            if (saved) {
-                timesheetData = JSON.parse(saved);
-            } else {
-                timesheetData = {};
-                Object.keys(monthsConfig).forEach(month => {
-                    timesheetData[month] = {};
-                });
-            }
-        }
+        // Create the January timesheet immediately when page loads
+        function createJanuaryTimesheet() {
+            const tbody = document.getElementById('timesheet-body');
+            tbody.innerHTML = '';
 
-        // Save data and sync
-        function saveData() {
-            localStorage.setItem('timesheetData_2025', JSON.stringify(timesheetData));
-            localStorage.setItem('timesheetData_lastSaved', new Date().toISOString());
-            generateShareableData(false);
-        }
-
-        // Generate shareable data file for boss view
-        function generateShareableData(showNotification = true) {
-            const shareableData = {
-                version: '1.0',
-                lastUpdated: new Date().toISOString(),
-                employeeName: 'Dominic',
-                data: timesheetData
-            };
-            
-            localStorage.setItem('shareableTimesheetData_2025', JSON.stringify(shareableData));
-            
-            if (showNotification) {
-                showNotification('Boss view updated! Share the link: boss-view.html', 'success');
-            }
-        }
-
-        // Generate timesheet table for January
-        function generateTimesheetRows() {
-            const tbody = document.getElementById('january-body');
-            const year = 2025;
-            const month = 0; // January
-            
             for (let day = 1; day <= 31; day++) {
-                const date = new Date(year, month, day);
+                const date = new Date(2025, 0, day);
                 const dateStr = date.toLocaleDateString('en-GB');
                 const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-                const dayNum = date.getDay();
-                
-                const dayData = timesheetData.january[day] || {};
-                
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
                 const row = document.createElement('tr');
-                if (dayNum === 0 || dayNum === 6) {
-                    row.classList.add('weekend');
-                }
-                
-                row.setAttribute('data-day', day);
+                if (isWeekend) row.classList.add('weekend');
                 
                 row.innerHTML = `
-                    <td><input type="checkbox" ${dayData.nonWorking ? 'checked' : ''} onchange="toggleNonWorkingDay('january', ${day}, this)"></td>
+                    <td><input type="checkbox" onchange="toggleNonWorking(${day}, this)"></td>
                     <td>${dateStr}</td>
                     <td>${dayName}</td>
-                    <td><input type="time" value="${dayData.startTime || ''}" onchange="updateTime('january', ${day}, 'startTime', this.value)"></td>
-                    <td><input type="time" value="${dayData.endTime || ''}" onchange="updateTime('january', ${day}, 'endTime', this.value)"></td>
+                    <td><input type="time" onchange="calculateHours(${day})"></td>
+                    <td><input type="time" onchange="calculateHours(${day})"></td>
                     <td class="raw-hours">0.00</td>
                     <td class="hours-worked">0.00</td>
-                    <td><input type="text" value="${dayData.notes || ''}" placeholder="Notes..." onchange="updateNotes('january', ${day}, this.value)"></td>
+                    <td><input type="text" placeholder="Notes..."></td>
                 `;
                 
                 tbody.appendChild(row);
             }
-            
-            // Add total row
+
+            // Add totals row
             const totalRow = document.createElement('tr');
             totalRow.classList.add('total-row');
             totalRow.innerHTML = `
@@ -762,298 +350,170 @@
             tbody.appendChild(totalRow);
         }
 
-        // Show specific month tab
-        function showTab(monthKey) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
-            
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(monthKey).classList.add('active');
-            
-            currentMonth = monthKey;
         }
 
-        // Toggle non-working day
-        function toggleNonWorkingDay(monthKey, day, checkbox) {
+        function toggleNonWorking(day, checkbox) {
             const row = checkbox.closest('tr');
-            const inputs = row.querySelectorAll('input:not([type="checkbox"])');
-            
-            if (!timesheetData[monthKey][day]) {
-                timesheetData[monthKey][day] = {};
-            }
-            
-            timesheetData[monthKey][day].nonWorking = checkbox.checked;
-            
+            const timeInputs = row.querySelectorAll('input[type="time"]');
+            const textInput = row.querySelector('input[type="text"]');
+
             if (checkbox.checked) {
                 row.classList.add('non-working-day');
-                inputs.forEach(input => {
-                    if (input.type === 'time') {
-                        input.value = '';
-                        input.disabled = true;
-                        timesheetData[monthKey][day].startTime = '';
-                        timesheetData[monthKey][day].endTime = '';
-                    } else if (input.type === 'text' && !input.value) {
-                        input.placeholder = "Holiday, Sick Day, etc.";
-                    }
+                timeInputs.forEach(input => {
+                    input.value = '';
+                    input.disabled = true;
                 });
+                textInput.placeholder = 'Holiday, Sick Day, etc.';
+                row.querySelector('.raw-hours').textContent = '';
+                row.querySelector('.hours-worked').textContent = '';
             } else {
                 row.classList.remove('non-working-day');
-                inputs.forEach(input => {
-                    if (input.type === 'time') {
-                        input.disabled = false;
-                    } else if (input.type === 'text') {
-                        input.placeholder = "Notes...";
-                    }
+                timeInputs.forEach(input => {
+                    input.disabled = false;
                 });
+                textInput.placeholder = 'Notes...';
+                row.querySelector('.raw-hours').textContent = '0.00';
+                row.querySelector('.hours-worked').textContent = '0.00';
             }
-            
-            updateCalculations(monthKey);
-            saveData();
+            updateTotals();
         }
 
-        // Update time data
-        function updateTime(monthKey, day, field, value) {
-            if (!timesheetData[monthKey][day]) {
-                timesheetData[monthKey][day] = {};
-            }
+        function calculateHours(day) {
+            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+            const row = rows[day - 1];
             
-            timesheetData[monthKey][day][field] = value;
-            updateCalculations(monthKey);
-            saveData();
+            if (row.classList.contains('non-working-day')) return;
+
+            const startInput = row.querySelectorAll('input[type="time"]')[0];
+            const endInput = row.querySelectorAll('input[type="time"]')[1];
+            
+            if (startInput.value && endInput.value) {
+                const start = new Date(`2000-01-01T${startInput.value}:00`);
+                const end = new Date(`2000-01-01T${endInput.value}:00`);
+                
+                if (end < start) end.setDate(end.getDate() + 1);
+                
+                const rawHours = (end - start) / (1000 * 60 * 60);
+                const date = new Date(2025, 0, day);
+                const dayOfWeek = date.getDay();
+                
+                let workedHours = rawHours;
+                
+                // Apply break deduction
+                if ((dayOfWeek >= 1 && dayOfWeek <= 5 && rawHours >= 9.0) || 
+                    (dayOfWeek === 6 && rawHours >= 6.5)) {
+                    workedHours = rawHours - 0.5;
+                }
+                
+                row.querySelector('.raw-hours').textContent = rawHours.toFixed(2);
+                row.querySelector('.hours-worked').textContent = workedHours.toFixed(2);
+                
+                // Color coding
+                const hoursCell = row.querySelector('.hours-worked');
+                hoursCell.classList.remove('hours-short', 'hours-good');
+                if (workedHours < 4 && workedHours > 0) {
+                    hoursCell.classList.add('hours-short');
+                } else if (workedHours >= 8) {
+                    hoursCell.classList.add('hours-good');
+                }
+            }
+            updateTotals();
         }
 
-        // Update notes
-        function updateNotes(monthKey, day, value) {
-            if (!timesheetData[monthKey][day]) {
-                timesheetData[monthKey][day] = {};
-            }
-            
-            timesheetData[monthKey][day].notes = value;
-            saveData();
-        }
-
-        // Calculate hours and update display
-        function updateCalculations(monthKey) {
-            if (monthKey !== 'january') return; // Only January is fully implemented in this version
-            
-            const config = monthsConfig[monthKey];
+        function updateTotals() {
+            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
             let totalRaw = 0;
             let totalWorked = 0;
             let workingDays = 0;
 
-            for (let day = 1; day <= config.days; day++) {
-                const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
-                if (!row) continue;
+            rows.forEach(row => {
+                if (row.classList.contains('non-working-day')) return;
                 
-                const dayData = timesheetData[monthKey][day] || {};
+                const rawHours = parseFloat(row.querySelector('.raw-hours').textContent) || 0;
+                const workedHours = parseFloat(row.querySelector('.hours-worked').textContent) || 0;
                 
-                if (dayData.nonWorking) {
-                    row.querySelector('.raw-hours').textContent = '';
-                    row.querySelector('.hours-worked').textContent = '';
-                    row.classList.add('non-working-day');
-                    continue;
-                } else {
-                    row.classList.remove('non-working-day');
-                }
+                totalRaw += rawHours;
+                totalWorked += workedHours;
+                
+                if (workedHours > 0) workingDays++;
+            });
 
-                if (dayData.startTime && dayData.endTime) {
-                    const start = new Date(`2000-01-01T${dayData.startTime}:00`);
-                    const end = new Date(`2000-01-01T${dayData.endTime}:00`);
-                    
-                    if (end < start) end.setDate(end.getDate() + 1);
-                    
-                    const rawHours = (end - start) / (1000 * 60 * 60);
-                    const date = new Date(2025, config.month, day);
-                    const dayOfWeek = date.getDay();
-                    
-                    let workedHours = rawHours;
-                    
-                    // Apply break deduction
-                    if ((dayOfWeek >= 1 && dayOfWeek <= 5 && rawHours >= 9.0) || 
-                        (dayOfWeek === 6 && rawHours >= 6.5)) {
-                        workedHours = rawHours - 0.5;
-                    }
-                    
-                    row.querySelector('.raw-hours').textContent = rawHours.toFixed(2);
-                    row.querySelector('.hours-worked').textContent = workedHours.toFixed(2);
-                    
-                    // Apply conditional formatting
-                    const hoursCell = row.querySelector('.hours-worked');
-                    hoursCell.classList.remove('hours-short', 'hours-good');
-                    if (workedHours < 4 && workedHours > 0) {
-                        hoursCell.classList.add('hours-short');
-                    } else if (workedHours >= 8) {
-                        hoursCell.classList.add('hours-good');
-                    }
-                    
-                    totalRaw += rawHours;
-                    totalWorked += workedHours;
-                    workingDays++;
-                } else {
-                    row.querySelector('.raw-hours').textContent = '0.00';
-                    row.querySelector('.hours-worked').textContent = '0.00';
-                }
-            }
-
-            // Update totals display
             document.getElementById('raw-total').textContent = totalRaw.toFixed(2);
             document.getElementById('worked-total').textContent = totalWorked.toFixed(2);
             document.getElementById('january-total').textContent = totalWorked.toFixed(2);
             document.getElementById('january-days').textContent = workingDays;
             document.getElementById('january-avg').textContent = workingDays > 0 ? (totalWorked / workingDays).toFixed(2) : '0.00';
-            
-            updateYearTotal();
-            updateLastSaved();
+            document.getElementById('year-total').textContent = totalWorked.toFixed(2) + ' hrs';
         }
 
-        // Update year total
-        function updateYearTotal() {
-            let yearTotal = 0;
-            Object.keys(monthsConfig).forEach(month => {
-                const monthTotal = parseFloat(document.getElementById(`${month}-total`)?.textContent || 0);
-                yearTotal += monthTotal;
-            });
-            document.getElementById('year-total').textContent = yearTotal.toFixed(2);
-        }
-
-        // Fill weekday times
-        function fillWeekdayTimes(monthKey, startTime, endTime) {
-            const config = monthsConfig[monthKey];
-            let filledCount = 0;
+        function fillWeekdays() {
+            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+            let filled = 0;
             
-            for (let day = 1; day <= config.days; day++) {
-                const date = new Date(2025, config.month, day);
+            rows.forEach((row, index) => {
+                const day = index + 1;
+                const date = new Date(2025, 0, day);
                 const dayOfWeek = date.getDay();
-                const dayData = timesheetData[monthKey][day] || {};
                 
-                if (dayOfWeek >= 1 && dayOfWeek <= 5 && !dayData.nonWorking) {
-                    if (!timesheetData[monthKey][day]) {
-                        timesheetData[monthKey][day] = {};
-                    }
-                    
-                    timesheetData[monthKey][day].startTime = startTime;
-                    timesheetData[monthKey][day].endTime = endTime;
-                    
-                    const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
-                    if (row) {
-                        const startInput = row.querySelector('input[type="time"]:nth-of-type(1)');
-                        const endInput = row.querySelector('input[type="time"]:nth-of-type(2)');
-                        
-                        if (startInput) startInput.value = startTime;
-                        if (endInput) endInput.value = endTime;
-                    }
-                    
-                    filledCount++;
+                if (dayOfWeek >= 1 && dayOfWeek <= 5 && !row.classList.contains('non-working-day')) {
+                    const timeInputs = row.querySelectorAll('input[type="time"]');
+                    timeInputs[0].value = '09:00';
+                    timeInputs[1].value = '18:00';
+                    calculateHours(day);
+                    filled++;
                 }
-            }
+            });
             
-            updateCalculations(monthKey);
-            saveData();
-            
-            showNotification(`✅ Filled ${filledCount} weekday${filledCount !== 1 ? 's' : ''} with ${startTime}-${endTime}!`);
+            alert(`Filled ${filled} weekdays with 9:00-18:00!`);
         }
 
-        // Mark UK bank holidays
-        function markBankHolidays(monthKey) {
-            const holidays = ukBankHolidays[monthKey] || [];
-            let marked = 0;
+        function markHolidays() {
+            const holidays = [
+                { day: 1, name: "New Year's Day" }
+            ];
             
             holidays.forEach(holiday => {
-                const date = new Date(holiday.date);
-                const day = date.getDate();
+                const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+                const row = rows[holiday.day - 1];
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                const notesInput = row.querySelector('input[type="text"]');
                 
-                if (!timesheetData[monthKey][day]) {
-                    timesheetData[monthKey][day] = {};
-                }
-                
-                timesheetData[monthKey][day].nonWorking = true;
-                timesheetData[monthKey][day].notes = holiday.name;
-                
-                const row = document.querySelector(`#${monthKey} tr[data-day="${day}"]`);
-                if (row) {
-                    const checkbox = row.querySelector('input[type="checkbox"]');
-                    const notesInput = row.querySelector('input[type="text"]');
-                    
-                    checkbox.checked = true;
-                    notesInput.value = holiday.name;
-                    toggleNonWorkingDay(monthKey, day, checkbox);
-                    marked++;
-                }
+                checkbox.checked = true;
+                notesInput.value = holiday.name;
+                toggleNonWorking(holiday.day, checkbox);
             });
             
-            if (marked > 0) {
-                showNotification(`${marked} UK bank holiday(s) marked!`);
-            } else {
-                showNotification('No bank holidays in this month', 'info');
-            }
+            alert('UK bank holidays marked!');
         }
 
-        // Clear all data for month
-        function clearMonth(monthKey) {
-            if (confirm(`Clear all data for ${monthsConfig[monthKey].name}? This cannot be undone.`)) {
-                timesheetData[monthKey] = {};
-                
-                const tbody = document.getElementById(`${monthKey}-body`);
-                if (!tbody) return;
-                
-                const rows = tbody.querySelectorAll('tr:not(.total-row)');
-                
-                rows.forEach(row => {
-                    row.querySelector('input[type="checkbox"]').checked = false;
-                    row.classList.remove('non-working-day');
-                    row.querySelectorAll('input[type="time"]').forEach(input => {
-                        input.value = '';
-                        input.disabled = false;
-                    });
-                    row.querySelector('input[type="text"]').value = '';
-                    row.querySelector('.raw-hours').textContent = '0.00';
-                    row.querySelector('.hours-worked').textContent = '0.00';
-                });
-                
-                updateCalculations(monthKey);
-                saveData();
-                showNotification('Month cleared!');
-            }
-        }
-
-        // Show notification
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
+        function updateBossView() {
+            // Simple data saving for boss view
+            const data = {
+                lastUpdated: new Date().toISOString(),
+                employeeName: 'Dominic',
+                january: {}
+            };
             
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+            localStorage.setItem('shareableTimesheetData_2025', JSON.stringify(data));
+            alert('Boss view updated! Share: boss-view.html');
         }
 
-        // Update last saved time display
-        function updateLastSaved() {
-            const lastSaved = localStorage.getItem('timesheetData_lastSaved');
-            if (lastSaved) {
-                const date = new Date(lastSaved);
-                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                document.getElementById('last-saved').textContent = timeStr;
-            }
-        }
-
-        // Initialize everything
-        function init() {
-            initializeData();
-            generateTimesheetRows();
-            updateCalculations('january');
-            updateLastSaved();
-            generateShareableData(false);
-            
-            setInterval(() => {
-                saveData();
-            }, 30000);
-        }
-
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', init);
-        window.addEventListener('beforeunload', saveData);
+        // Create the timesheet immediately when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createJanuaryTimesheet();
+        });
     </script>
 </body>
 </html>
