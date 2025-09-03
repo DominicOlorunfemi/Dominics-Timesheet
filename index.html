@@ -261,8 +261,8 @@
             </div>
 
             <div class="controls">
-                <button class="btn btn-primary" onclick="fillWeekdays()">⏰ Fill 9-6 Weekdays</button>
-                <button class="btn btn-secondary" onclick="markHolidays()">🏦 UK Holidays</button>
+                <button class="btn btn-primary" onclick="fillWeekdays('january')">⏰ Fill 9-6 Weekdays</button>
+                <button class="btn btn-secondary" onclick="markHolidays('january')">🏦 UK Holidays</button>
                 <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
             </div>
 
@@ -279,43 +279,149 @@
                         <th style="width: 180px;">Notes</th>
                     </tr>
                 </thead>
-                <tbody id="timesheet-body">
+                <tbody id="january-body">
                     <!-- January days will be here -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Other months -->
+        <!-- All other months will have the same structure -->
         <div id="february" class="tab-content">
-            <div class="month-summary">
-                <div class="summary-item"><div class="summary-label">Month</div><div class="summary-value">February 2025</div></div>
-                <div class="summary-item"><div class="summary-label">Hours</div><div class="summary-value">0.00</div></div>
+            <div class="instructions">
+                <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+                System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
             </div>
-            <p style="text-align: center; padding: 40px; color: #666;">February timesheet (same structure as January)</p>
+
+            <div class="month-summary">
+                <div class="summary-item">
+                    <div class="summary-label">Month</div>
+                    <div class="summary-value">February 2025</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Hours</div>
+                    <div class="summary-value" id="february-total">0.00</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Days</div>
+                    <div class="summary-value" id="february-days">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Average</div>
+                    <div class="summary-value" id="february-avg">0.00</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="fillWeekdays('february')">⏰ Fill 9-6 Weekdays</button>
+                <button class="btn btn-secondary" onclick="markHolidays('february')">🏦 UK Holidays</button>
+                <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+            </div>
+
+            <table class="timesheet-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">❌</th>
+                        <th style="width: 85px;">Date</th>
+                        <th style="width: 70px;">Day</th>
+                        <th style="width: 80px;">Start</th>
+                        <th style="width: 80px;">End</th>
+                        <th style="width: 85px;">Raw</th>
+                        <th style="width: 85px;">Paid</th>
+                        <th style="width: 180px;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="february-body"></tbody>
+            </table>
         </div>
 
-        <div id="march" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">March timesheet</p></div>
-        <div id="april" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">April timesheet</p></div>
-        <div id="may" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">May timesheet</p></div>
-        <div id="june" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">June timesheet</p></div>
-        <div id="july" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">July timesheet</p></div>
-        <div id="august" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">August timesheet</p></div>
-        <div id="september" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">September timesheet</p></div>
-        <div id="october" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">October timesheet</p></div>
-        <div id="november" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">November timesheet</p></div>
-        <div id="december" class="tab-content"><p style="text-align: center; padding: 40px; color: #666;">December timesheet</p></div>
+        <!-- Continue with all other months... -->
+        <!-- I'll create the structure for all remaining months -->
     </div>
 
     <script>
+        const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 
+                           'july', 'august', 'september', 'october', 'november', 'december'];
+        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        
         let timesheetData = {};
 
-        // Create the January timesheet immediately when page loads
-        function createJanuaryTimesheet() {
-            const tbody = document.getElementById('timesheet-body');
+        // UK Bank Holidays 2025
+        const holidays = {
+            january: [{ day: 1, name: "New Year's Day" }],
+            february: [],
+            march: [],
+            april: [{ day: 18, name: "Good Friday" }, { day: 21, name: "Easter Monday" }],
+            may: [{ day: 5, name: "Early May Bank Holiday" }, { day: 26, name: "Spring Bank Holiday" }],
+            june: [],
+            july: [],
+            august: [{ day: 25, name: "Summer Bank Holiday" }],
+            september: [],
+            october: [],
+            november: [],
+            december: [{ day: 25, name: "Christmas Day" }, { day: 26, name: "Boxing Day" }]
+        };
+
+        function createMonthContent(monthName, monthIndex) {
+            if (monthIndex > 1) { // Skip January and February as they're already in HTML
+                const monthDiv = document.getElementById(monthName);
+                monthDiv.innerHTML = `
+                    <div class="instructions">
+                        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+                        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+                    </div>
+
+                    <div class="month-summary">
+                        <div class="summary-item">
+                            <div class="summary-label">Month</div>
+                            <div class="summary-value">${monthName.charAt(0).toUpperCase() + monthName.slice(1)} 2025</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Hours</div>
+                            <div class="summary-value" id="${monthName}-total">0.00</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Days</div>
+                            <div class="summary-value" id="${monthName}-days">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Average</div>
+                            <div class="summary-value" id="${monthName}-avg">0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="btn btn-primary" onclick="fillWeekdays('${monthName}')">⏰ Fill 9-6 Weekdays</button>
+                        <button class="btn btn-secondary" onclick="markHolidays('${monthName}')">🏦 UK Holidays</button>
+                        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+                    </div>
+
+                    <table class="timesheet-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;">❌</th>
+                                <th style="width: 85px;">Date</th>
+                                <th style="width: 70px;">Day</th>
+                                <th style="width: 80px;">Start</th>
+                                <th style="width: 80px;">End</th>
+                                <th style="width: 85px;">Raw</th>
+                                <th style="width: 85px;">Paid</th>
+                                <th style="width: 180px;">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="${monthName}-body"></tbody>
+                    </table>
+                `;
+            }
+        }
+
+        function createMonthTimesheet(monthName, monthIndex) {
+            const tbody = document.getElementById(`${monthName}-body`);
             tbody.innerHTML = '';
 
-            for (let day = 1; day <= 31; day++) {
-                const date = new Date(2025, 0, day);
+            const daysInThisMonth = daysInMonth[monthIndex];
+            
+            for (let day = 1; day <= daysInThisMonth; day++) {
+                const date = new Date(2025, monthIndex, day);
                 const dateStr = date.toLocaleDateString('en-GB');
                 const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
                 const isWeekend = date.getDay() === 0 || date.getDay() === 6;
@@ -324,11 +430,11 @@
                 if (isWeekend) row.classList.add('weekend');
                 
                 row.innerHTML = `
-                    <td><input type="checkbox" onchange="toggleNonWorking(${day}, this)"></td>
+                    <td><input type="checkbox" onchange="toggleNonWorking('${monthName}', ${day}, this)"></td>
                     <td>${dateStr}</td>
                     <td>${dayName}</td>
-                    <td><input type="time" onchange="calculateHours(${day})"></td>
-                    <td><input type="time" onchange="calculateHours(${day})"></td>
+                    <td><input type="time" onchange="calculateHours('${monthName}', ${day})"></td>
+                    <td><input type="time" onchange="calculateHours('${monthName}', ${day})"></td>
                     <td class="raw-hours">0.00</td>
                     <td class="hours-worked">0.00</td>
                     <td><input type="text" placeholder="Notes..."></td>
@@ -343,8 +449,8 @@
             totalRow.innerHTML = `
                 <td></td>
                 <td colspan="4" style="text-align: right; font-weight: bold;">TOTAL:</td>
-                <td class="total-cell" id="raw-total">0.00</td>
-                <td class="total-cell" id="worked-total">0.00</td>
+                <td class="total-cell" id="${monthName}-raw-total">0.00</td>
+                <td class="total-cell" id="${monthName}-worked-total">0.00</td>
                 <td></td>
             `;
             tbody.appendChild(totalRow);
@@ -364,7 +470,7 @@
             event.target.classList.add('active');
         }
 
-        function toggleNonWorking(day, checkbox) {
+        function toggleNonWorking(monthName, day, checkbox) {
             const row = checkbox.closest('tr');
             const timeInputs = row.querySelectorAll('input[type="time"]');
             const textInput = row.querySelector('input[type="text"]');
@@ -387,11 +493,12 @@
                 row.querySelector('.raw-hours').textContent = '0.00';
                 row.querySelector('.hours-worked').textContent = '0.00';
             }
-            updateTotals();
+            updateTotals(monthName);
         }
 
-        function calculateHours(day) {
-            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+        function calculateHours(monthName, day) {
+            const monthIndex = monthNames.indexOf(monthName);
+            const rows = document.querySelectorAll(`#${monthName}-body tr:not(.total-row)`);
             const row = rows[day - 1];
             
             if (row.classList.contains('non-working-day')) return;
@@ -406,7 +513,7 @@
                 if (end < start) end.setDate(end.getDate() + 1);
                 
                 const rawHours = (end - start) / (1000 * 60 * 60);
-                const date = new Date(2025, 0, day);
+                const date = new Date(2025, monthIndex, day);
                 const dayOfWeek = date.getDay();
                 
                 let workedHours = rawHours;
@@ -429,11 +536,11 @@
                     hoursCell.classList.add('hours-good');
                 }
             }
-            updateTotals();
+            updateTotals(monthName);
         }
 
-        function updateTotals() {
-            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+        function updateTotals(monthName) {
+            const rows = document.querySelectorAll(`#${monthName}-body tr:not(.total-row)`);
             let totalRaw = 0;
             let totalWorked = 0;
             let workingDays = 0;
@@ -450,28 +557,39 @@
                 if (workedHours > 0) workingDays++;
             });
 
-            document.getElementById('raw-total').textContent = totalRaw.toFixed(2);
-            document.getElementById('worked-total').textContent = totalWorked.toFixed(2);
-            document.getElementById('january-total').textContent = totalWorked.toFixed(2);
-            document.getElementById('january-days').textContent = workingDays;
-            document.getElementById('january-avg').textContent = workingDays > 0 ? (totalWorked / workingDays).toFixed(2) : '0.00';
-            document.getElementById('year-total').textContent = totalWorked.toFixed(2) + ' hrs';
+            document.getElementById(`${monthName}-raw-total`).textContent = totalRaw.toFixed(2);
+            document.getElementById(`${monthName}-worked-total`).textContent = totalWorked.toFixed(2);
+            document.getElementById(`${monthName}-total`).textContent = totalWorked.toFixed(2);
+            document.getElementById(`${monthName}-days`).textContent = workingDays;
+            document.getElementById(`${monthName}-avg`).textContent = workingDays > 0 ? (totalWorked / workingDays).toFixed(2) : '0.00';
+            
+            updateYearTotal();
         }
 
-        function fillWeekdays() {
-            const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+        function updateYearTotal() {
+            let yearTotal = 0;
+            monthNames.forEach(month => {
+                const monthTotal = parseFloat(document.getElementById(`${month}-total`).textContent) || 0;
+                yearTotal += monthTotal;
+            });
+            document.getElementById('year-total').textContent = yearTotal.toFixed(2) + ' hrs';
+        }
+
+        function fillWeekdays(monthName) {
+            const monthIndex = monthNames.indexOf(monthName);
+            const rows = document.querySelectorAll(`#${monthName}-body tr:not(.total-row)`);
             let filled = 0;
             
             rows.forEach((row, index) => {
                 const day = index + 1;
-                const date = new Date(2025, 0, day);
+                const date = new Date(2025, monthIndex, day);
                 const dayOfWeek = date.getDay();
                 
                 if (dayOfWeek >= 1 && dayOfWeek <= 5 && !row.classList.contains('non-working-day')) {
                     const timeInputs = row.querySelectorAll('input[type="time"]');
                     timeInputs[0].value = '09:00';
                     timeInputs[1].value = '18:00';
-                    calculateHours(day);
+                    calculateHours(monthName, day);
                     filled++;
                 }
             });
@@ -479,40 +597,49 @@
             alert(`Filled ${filled} weekdays with 9:00-18:00!`);
         }
 
-        function markHolidays() {
-            const holidays = [
-                { day: 1, name: "New Year's Day" }
-            ];
+        function markHolidays(monthName) {
+            const monthHolidays = holidays[monthName] || [];
             
-            holidays.forEach(holiday => {
-                const rows = document.querySelectorAll('#timesheet-body tr:not(.total-row)');
+            monthHolidays.forEach(holiday => {
+                const rows = document.querySelectorAll(`#${monthName}-body tr:not(.total-row)`);
                 const row = rows[holiday.day - 1];
                 const checkbox = row.querySelector('input[type="checkbox"]');
                 const notesInput = row.querySelector('input[type="text"]');
                 
                 checkbox.checked = true;
                 notesInput.value = holiday.name;
-                toggleNonWorking(holiday.day, checkbox);
+                toggleNonWorking(monthName, holiday.day, checkbox);
             });
             
-            alert('UK bank holidays marked!');
+            alert(`UK bank holidays marked for ${monthName}!`);
         }
 
         function updateBossView() {
-            // Simple data saving for boss view
             const data = {
                 lastUpdated: new Date().toISOString(),
                 employeeName: 'Dominic',
-                january: {}
+                year: 2025,
+                months: {}
             };
+            
+            monthNames.forEach(month => {
+                data.months[month] = {
+                    total: document.getElementById(`${month}-total`).textContent,
+                    days: document.getElementById(`${month}-days`).textContent,
+                    average: document.getElementById(`${month}-avg`).textContent
+                };
+            });
             
             localStorage.setItem('shareableTimesheetData_2025', JSON.stringify(data));
             alert('Boss view updated! Share: boss-view.html');
         }
 
-        // Create the timesheet immediately when page loads
+        // Initialize all months when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            createJanuaryTimesheet();
+            monthNames.forEach((month, index) => {
+                createMonthContent(month, index);
+                createMonthTimesheet(month, index);
+            });
         });
     </script>
 </body>
