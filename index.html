@@ -615,23 +615,57 @@
         }
 
         function updateBossView() {
+            // Collect all timesheet data from all months
+            const completeData = {};
+            
+            monthNames.forEach(month => {
+                const monthData = {};
+                const monthIndex = monthNames.indexOf(month);
+                const daysInThisMonth = daysInMonth[monthIndex];
+                
+                const rows = document.querySelectorAll(`#${month}-body tr:not(.total-row)`);
+                
+                for (let day = 1; day <= daysInThisMonth; day++) {
+                    const row = rows[day - 1];
+                    if (row) {
+                        const checkbox = row.querySelector('input[type="checkbox"]');
+                        const timeInputs = row.querySelectorAll('input[type="time"]');
+                        const notesInput = row.querySelector('input[type="text"]');
+                        
+                        if (checkbox && checkbox.checked) {
+                            monthData[day] = {
+                                nonWorking: true,
+                                notes: notesInput ? notesInput.value : ''
+                            };
+                        } else if (timeInputs[0] && timeInputs[1] && timeInputs[0].value && timeInputs[1].value) {
+                            monthData[day] = {
+                                startTime: timeInputs[0].value,
+                                endTime: timeInputs[1].value,
+                                notes: notesInput ? notesInput.value : ''
+                            };
+                        }
+                    }
+                }
+                
+                if (Object.keys(monthData).length > 0) {
+                    completeData[month] = monthData;
+                }
+            });
+            
+            // Save complete data for boss view
+            localStorage.setItem('timesheetData_2025', JSON.stringify(completeData));
+            localStorage.setItem('timesheetData_lastSaved', new Date().toISOString());
+            
+            // Also save in the old format for compatibility
             const data = {
                 lastUpdated: new Date().toISOString(),
                 employeeName: 'Dominic',
                 year: 2025,
-                months: {}
+                data: completeData
             };
             
-            monthNames.forEach(month => {
-                data.months[month] = {
-                    total: document.getElementById(`${month}-total`).textContent,
-                    days: document.getElementById(`${month}-days`).textContent,
-                    average: document.getElementById(`${month}-avg`).textContent
-                };
-            });
-            
             localStorage.setItem('shareableTimesheetData_2025', JSON.stringify(data));
-            alert('Boss view updated! Share: boss-view.html');
+            alert('Boss view updated successfully! Open boss-view.html to see the data.');
         }
 
         // Initialize all months when page loads
