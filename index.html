@@ -335,6 +335,515 @@
         </div>
 
         <!-- Continue with all other months... -->
+        <!-- March Tab -->
+<div id="march" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">March 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="march-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="march-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="march-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('march')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('march')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="march-body">
+            <!-- March days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- April Tab -->
+<div id="april" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">April 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="april-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="april-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="april-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('april')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('april')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="april-body">
+            <!-- April days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- May Tab -->
+<div id="may" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">May 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="may-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="may-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="may-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('may')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('may')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="may-body">
+            <!-- May days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- June Tab -->
+<div id="june" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">June 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="june-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="june-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="june-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('june')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('june')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="june-body">
+            <!-- June days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- July Tab -->
+<div id="july" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">July 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="july-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="july-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="july-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('july')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('july')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="july-body">
+            <!-- July days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- August Tab -->
+<div id="august" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">August 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="august-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="august-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="august-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('august')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('august')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="august-body">
+            <!-- August days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- September Tab -->
+<div id="september" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">September 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="september-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="september-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="september-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('september')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('september')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="september-body">
+            <!-- September days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- October Tab -->
+<div id="october" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">October 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="october-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="october-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="october-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('october')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('october')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="october-body">
+            <!-- October days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- November Tab -->
+<div id="november" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">November 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="november-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="november-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="november-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('november')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('november')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="november-body">
+            <!-- November days will be here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- December Tab -->
+<div id="december" class="tab-content">
+    <div class="instructions">
+        <strong>📋 Quick Guide:</strong> Check ❌ for non-working days (holidays, sick days). Enter times for work days. 
+        System auto-deducts 30min breaks for 9+ hour weekdays or 6.5+ hour Saturdays.
+    </div>
+
+    <div class="month-summary">
+        <div class="summary-item">
+            <div class="summary-label">Month</div>
+            <div class="summary-value">December 2025</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Hours</div>
+            <div class="summary-value" id="december-total">0.00</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Days</div>
+            <div class="summary-value" id="december-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Average</div>
+            <div class="summary-value" id="december-avg">0.00</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="fillWeekdays('december')">⏰ Fill 9-6 Weekdays</button>
+        <button class="btn btn-secondary" onclick="markHolidays('december')">🏦 UK Holidays</button>
+        <button class="btn btn-success" onclick="updateBossView()">📤 Update Boss View</button>
+    </div>
+
+    <table class="timesheet-table">
+        <thead>
+            <tr>
+                <th style="width: 45px;">❌</th>
+                <th style="width: 85px;">Date</th>
+                <th style="width: 70px;">Day</th>
+                <th style="width: 80px;">Start</th>
+                <th style="width: 80px;">End</th>
+                <th style="width: 85px;">Raw</th>
+                <th style="width: 85px;">Paid</th>
+                <th style="width: 180px;">Notes</th>
+            </tr>
+        </thead>
+        <tbody id="december-body">
+            <!-- December days will be here -->
+        </tbody>
+    </table>
+</div>
         <!-- I'll create the structure for all remaining months -->
     </div>
 
