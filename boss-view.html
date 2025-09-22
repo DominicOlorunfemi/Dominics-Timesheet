@@ -396,8 +396,8 @@
             .tabs { display: none !important; }
             .status-bar { display: none !important; }
             .tab-content { display: block !important; page-break-inside: avoid; }
-            .tab-content:not(.active) { display: none !important; }
-            .footer-info { display: none !important; }
+            .export-controls { display: none !important; }
+            .footer-info { page-break-inside: avoid; }
             @page { margin: 0.5in; size: landscape; }
         }
     </style>
@@ -419,6 +419,7 @@
                     <div class="year-label">Total Year Hours</div>
                     <div class="export-controls">
                         <button class="btn-export" onclick="window.print()">📄 Print Report</button>
+                        <button class="btn-export" onclick="exportPDF()">📋 Download PDF</button>
                         <button class="btn-export" onclick="exportSummary()">📊 Export Summary</button>
                         <button class="btn-export" onclick="refreshData()">🔄 Refresh</button>
                     </div>
@@ -468,21 +469,33 @@
         let lastUpdated = null;
         let yearTotalHours = 0;
 
-        // Load shared data from the personal timesheet
-        function loadSharedData() {
+        // Load timesheet data from localStorage
+        function loadTimesheetData() {
             try {
-                const sharedData = localStorage.getItem('shareableTimesheetData_2025');
-                
-                if (sharedData) {
-                    const parsedData = JSON.parse(sharedData);
-                    timesheetData = parsedData || {};
-                    employeeName = parsedData.employeeName || 'Dominic';
-                    lastUpdated = parsedData.lastUpdated;
+                // Try the primary data format first
+                const primaryData = localStorage.getItem('timesheetData_2025');
+                if (primaryData) {
+                    timesheetData = JSON.parse(primaryData);
+                    lastUpdated = localStorage.getItem('timesheetData_lastSaved');
+                    console.log('Loaded primary data:', timesheetData);
                     return true;
                 }
+                
+                // Fallback to shared data format
+                const sharedData = localStorage.getItem('shareableTimesheetData_2025');
+                if (sharedData) {
+                    const parsedSharedData = JSON.parse(sharedData);
+                    timesheetData = parsedSharedData.data || {};
+                    employeeName = parsedSharedData.employeeName || 'Dominic';
+                    lastUpdated = parsedSharedData.lastUpdated;
+                    console.log('Loaded shared data:', timesheetData);
+                    return true;
+                }
+                
+                console.log('No timesheet data found in localStorage');
                 return false;
             } catch (error) {
-                console.error('Error loading shared data:', error);
+                console.error('Error loading timesheet data:', error);
                 return false;
             }
         }
@@ -492,6 +505,9 @@
             const monthDiv = document.getElementById(monthName);
             const daysInThisMonth = daysInMonth[monthIndex];
             const monthDisplay = monthDisplayNames[monthIndex];
+            const monthData = timesheetData[monthName] || {};
+
+            console.log(`Generating ${monthName}:`, monthData);
 
             // Calculate month statistics
             let totalRaw = 0;
@@ -499,19 +515,6 @@
             let totalBreaks = 0;
             let workingDays = 0;
             let hasData = false;
-
-            // Check if we have data for this month in localStorage (from personal timesheet)
-            const personalData = localStorage.getItem('timesheetData_2025');
-            let monthData = {};
-            
-            if (personalData) {
-                try {
-                    const parsedPersonalData = JSON.parse(personalData);
-                    monthData = parsedPersonalData[monthName] || {};
-                } catch (error) {
-                    console.error('Error parsing personal data:', error);
-                }
-            }
 
             // Calculate totals for this month
             for (let day = 1; day <= daysInThisMonth; day++) {
@@ -584,11 +587,12 @@
                     <div class="no-data-message">
                         <h3>📋 ${monthDisplay} Data</h3>
                         <p>No timesheet data available for this month yet.</p>
+                        <p style="font-size: 11px; margin-top: 10px;">Make sure to click "📤 Update Boss View" in your personal timesheet after entering hours.</p>
                     </div>
                 `}
 
                 <div class="footer-info">
-                    <div class="generated-time">Report generated: <span id="report-time">${new Date().toLocaleString()}</span></div>
+                    <div class="generated-time">Report generated: ${new Date().toLocaleString()}</div>
                     <div style="margin-top: 8px; opacity: 0.7;">
                         Break Policy: 30min deduction for 9+ hour weekdays or 6.5+ hour Saturdays • 
                         Overtime hours are fully paid with break deduction applied
@@ -716,32 +720,11 @@
             document.getElementById(monthKey).classList.add('active');
         }
 
-        // Calculate year total
-        function calculateYearTotal() {
-            let total = 0;
-            monthNames.forEach(month => {
-                const monthTotal = document.getElementById(`${month}-total`);
-                if (monthTotal) {
-                    total += parseFloat(monthTotal.textContent) || 0;
-                }
-            });
-            return total;
-        }
-
-        // Refresh data
-        function refreshData() {
-            init();
-            showNotification('✅ Data refreshed successfully', 'success');
-        }
-
         // Export PDF
         function exportPDF() {
-            // Create a comprehensive PDF-ready view
-            const currentActiveTab = document.querySelector('.tab.active').textContent;
             showNotification('📋 Generating PDF... This may take a moment.', 'warning');
             
             setTimeout(() => {
-                // Store current tab
                 const activeTabId = document.querySelector('.tab-content.active').id;
                 
                 // Show all months for PDF
@@ -755,7 +738,6 @@
                 
                 // Hide tabs for PDF
                 document.querySelector('.tabs').style.display = 'none';
-                document.querySelector('.status-bar') && (document.querySelector('.status-bar').style.display = 'none');
                 
                 // Add PDF title
                 const pdfTitle = document.createElement('div');
@@ -773,110 +755,8 @@
                 
                 // Restore view after print dialog
                 setTimeout(() => {
-                    // Remove PDF title
                     pdfTitle.remove();
-                    
-                    // Restore tabs
                     document.querySelector('.tabs').style.display = 'flex';
-                    const statusBar = document.querySelector('.status-bar');
-                    if (statusBar) statusBar.style.display = 'flex';
                     
-                    // Restore original tab view
                     monthNames.forEach(month => {
-                        const content = document.getElementById(month);
-                        content.style.display = originalDisplay[month];
-                        content.classList.remove('active');
-                    });
-                    document.getElementById(activeTabId).classList.add('active');
-                    
-                    showNotification('📋 PDF export completed!', 'success');
-                }, 1000);
-            }, 500);
-        }
-
-        // Export summary
-        function exportSummary() {
-            let csv = 'Month,Working Days,Raw Hours,Paid Hours,Break Deductions,Average Hours/Day\n';
-            
-            monthNames.forEach((month, index) => {
-                const monthTotal = document.getElementById(`${month}-total`);
-                const monthDays = document.getElementById(`${month}-days`);
-                const monthAvg = document.getElementById(`${month}-avg`);
-                const monthRaw = document.getElementById(`${month}-raw`);
-                const monthBreaks = document.getElementById(`${month}-breaks`);
-                
-                if (monthTotal) {
-                    csv += `${monthDisplayNames[index]} 2025,${monthDays.textContent},${monthRaw.textContent},${monthTotal.textContent},${monthBreaks.textContent},${monthAvg.textContent}\n`;
-                }
-            });
-            
-            downloadFile(csv, `dominic-timesheet-summary-2025.csv`, 'text/csv');
-            showNotification('📊 Summary exported successfully', 'success');
-        }
-
-        // Download file helper
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Show notification
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed; top: 20px; right: 20px; z-index: 1000;
-                padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 500;
-                transform: translateX(100%); transition: transform 0.3s ease;
-                ${type === 'success' ? 'background: #28a745; color: white;' : ''}
-                ${type === 'warning' ? 'background: #ffc107; color: #856404;' : ''}
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
-            setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => document.body.removeChild(notification), 300);
-            }, 3000);
-        }
-
-        // Initialize
-        function init() {
-            document.getElementById('report-time').textContent = new Date().toLocaleString();
-            
-            // Load data and generate all month contents
-            yearTotalHours = 0;
-            monthNames.forEach((month, index) => {
-                const monthTotal = generateMonthContent(month, index);
-                yearTotalHours += monthTotal;
-            });
-
-            // Update year total
-            document.getElementById('year-total').textContent = yearTotalHours.toFixed(2);
-
-            // Update last updated time
-            const personalData = localStorage.getItem('timesheetData_2025');
-            if (personalData) {
-                const lastSaved = localStorage.getItem('timesheetData_lastSaved');
-                if (lastSaved) {
-                    const updateTime = new Date(lastSaved);
-                    document.getElementById('last-updated').textContent = `Updated: ${updateTime.toLocaleString()}`;
-                } else {
-                    document.getElementById('last-updated').textContent = 'Updated: Recently';
-                }
-            } else {
-                document.getElementById('last-updated').textContent = 'No data available';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+                        const content
